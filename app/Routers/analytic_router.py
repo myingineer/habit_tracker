@@ -39,6 +39,32 @@ async def get_all_analytics_data(db: Session = Depends(database.get_db), current
 
     return response_data
 
+# Get all analytics data/streaks for a specific habit
+@router.get("/{habit_id}", status_code=status.HTTP_200_OK)
+async def get_specific_analytics_data(habit_id: int, db: Session = Depends(database.get_db), current_user: users_schemas.User = Depends(oauth2.get_current_user)):
+
+    habit = db.query(habits_model.Habit).filter(habits_model.Habit.habit_id == habit_id).first()
+    await validators.Validator_Functions.habit_exist(habit, habit_id)
+    await validators.Validator_Functions.confirm_permission(habit.user_id, current_user.user_id)
+
+    analysis = db.query(analytics_model.Analytic).filter(analytics_model.Analytic.habit_id == habit_id).first()
+    habit_info = {
+        "name": habit.habit,
+        "description": habit.description
+    }
+
+    response_data = analytics_schema.AnalyticResponse(
+        habit_id=analysis.habit_id,
+        current_streak_count=analysis.current_streak_count,
+        longest_streak_count=analysis.longest_streak_count,
+        periodicity=analysis.periodicity,
+        user_id=current_user.user_id,
+        habit=habit_info['name'],
+        description=habit_info['description']
+    )
+
+    return response_data
+
 
 # Update the streak count
 @router.post("/streak/update", status_code=status.HTTP_200_OK, response_model=analytics_schema.AnalyticResponse)
