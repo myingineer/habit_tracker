@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-from typing import List
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.orm import Session
 from ..Utils import database, oauth2, validators, analytic_helper

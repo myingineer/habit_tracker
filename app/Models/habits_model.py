@@ -7,7 +7,7 @@ from ..Models import Base
 class Habit(Base):
     __tablename__ = "habit_table"
     
-    habit_id = Column(Integer, primary_key=True, nullable=False)
+    habit_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     habit = Column(String, nullable=False)
     periodicity = Column(SQLAlchemyEnum(Periodicity, name='periodicity'), nullable=False)
     description = Column(String, nullable=False)

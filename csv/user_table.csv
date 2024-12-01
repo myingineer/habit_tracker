@@ -1,0 +1,3 @@
+"user_id","username","email","password","created_at","token","token_expiry","is_token_verified"
+1,"alexis","alexis@gmail.com","$2b$12$XEFEudKb3WsbIWmZ/Z6AR.RrDXMvNiCmMsXdtW33XOon/M3DZHCB6","2024-12-01 16:21:06.788676+01",NULL,NULL,False
+2,"john","john@gmail.com","$2b$12$ix94Uj8Ga95JCRNfH3Mp/OCNI6r148aPKbb6tqzOmaev/H751CJZi","2024-12-01 16:21:25.038961+01",NULL,NULL,False

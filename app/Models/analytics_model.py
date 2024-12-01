@@ -18,7 +18,7 @@ class Analytic(Base):
 class AnalyticsDaily(Base):
     __tablename__ = "daily_habit_analytics"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     habit_id = Column(Integer, ForeignKey('habit_table.habit_id', ondelete='CASCADE'), nullable=False)
     streak_completed_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     streak_count = Column(Integer, nullable=False, server_default=text('0'))
@@ -26,7 +26,7 @@ class AnalyticsDaily(Base):
 class AnalyticsWeekly(Base):
     __tablename__ = "weekly_habit_analytics"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     habit_id = Column(Integer, ForeignKey('habit_table.habit_id', ondelete='CASCADE'), nullable=False)
     streak_completed_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     streak_count = Column(Integer, nullable=False, server_default=text('0'))
@@ -34,7 +34,7 @@ class AnalyticsWeekly(Base):
 class AnalyticsMonthly(Base):
     __tablename__ = "monthly_habit_analytics"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     habit_id = Column(Integer, ForeignKey('habit_table.habit_id', ondelete='CASCADE'), nullable=False)
     streak_completed_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     streak_count = Column(Integer, nullable=False, server_default=text('0'))

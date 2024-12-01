@@ -1,7 +1,6 @@
 from .validators import Validator_Functions
 from datetime import datetime, timedelta, timezone, date
 from ..Schemas import habits_schemas
-from fastapi import HTTPException, status
 from ..Schemas import analytics_schema, users_schemas
 from ..Models import habits_model, analytics_model
 
@@ -31,7 +30,7 @@ def refresh_streak_and_time(analytic, habit, current_time):
 
     return True
 
-
+# Function to check if the streak was missed
 def is_streak_missed(last_updated, periodicity, current_time):
     if periodicity == habits_schemas.Periodicity.Daily:
         # Missed streak if the last update was not yesterday or today
@@ -51,6 +50,8 @@ def is_streak_missed(last_updated, periodicity, current_time):
 
     return False  # Default case, should not occur
 
+
+# Function to update the streak count for a habit
 async def update_streak_count(
     streak_data: analytics_schema.Streak,
     current_user: users_schemas.User, 
@@ -99,7 +100,7 @@ async def update_streak_count(
         # Check if the streak was missed
         if is_streak_missed(last_update, habit.periodicity, current_time):
             analytic.current_streak_count = 0
-            
+
         # Check if the update is allowed
         if current_time >= next_update_time:
             refresh_streak_and_time(analytic, habit, current_time)

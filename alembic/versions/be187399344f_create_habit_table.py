@@ -22,7 +22,7 @@ def upgrade() -> None:
 
     op.create_table(
         "habit_table",
-        sa.Column("habit_id", sa.Integer, primary_key=True, nullable=False),
+        sa.Column("habit_id", sa.Integer, primary_key=True, nullable=False, autoincrement=True),
         sa.Column("habit", sa.String, nullable=False),
         sa.Column("periodicity", sa.Enum(Periodicity, name='periodicity'), nullable=False),
         sa.Column("description", sa.String, nullable=False),
