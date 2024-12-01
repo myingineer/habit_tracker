@@ -81,7 +81,7 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
         http://127.0.0.1:8000/docs#/ in your browser _or_
         http://127.0.0.1:8000/redoc
 
-        _make sure the port **8000** is the same as where your project is running on from point **8** above_
+    _make sure the port **8000** is the same as where your project is running on from point **8** above_
 
 
 ### **Note on Email App Password and Address**  
