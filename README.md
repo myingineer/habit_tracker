@@ -28,7 +28,7 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
 
 3. **Install Dependencies**
 
-    pip install -r requirements.txt
+        pip install -r requirements.txt
 
 4. **Download and Setup a PostgreSQL Server**
     - Install PostgreSQL _if you do not have_
