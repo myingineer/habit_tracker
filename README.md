@@ -23,9 +23,11 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
 2. **Set up a Virtual environment**
     Set up a virtual environment on your pc to run this project.
     This project was done using a mac, run this code in your terminal
+
         python -m venv venv
 
 3. **Install Dependencies**
+
     pip install -r requirements.txt
 
 4. **Download and Setup a PostgreSQL Server**
@@ -56,10 +58,12 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
 
 7. **Add testing data to the respective tables**
     In the terminal, run this command
+
         python load_csv_to_db.py
 
 8. **Run the code**
     In the terminal, run this command
+
         uvicorn app.main:app --reload
 
 
