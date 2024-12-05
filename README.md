@@ -95,11 +95,17 @@ Any of these user can be used to test the code
 
             Navigate to
             
-                http://127.0.0.1:8000/docs#/ in your browser
+                http://127.0.0.1:8000/docs#/
+                This tests out the endpoints
                 _or_
                 http://127.0.0.1:8000/redoc
+                This gives a clearer documentation
 
     _make sure the port **8000** is the same as where your project is running on from point **9** above_
+
+## NOTE ON LOGIN ENDPOINT --------------
+If you plan to send the **login** details via Postman or Thunder client, send the body as a **form-data** **_not_** **raw**
+If you want to login via FastApi documentation through the link in **10**, Login via the **Authorize** at the very top
 
 
 ### **Note on Email App Password and Address**  
