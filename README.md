@@ -58,24 +58,25 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
             - EMAIL_APP_PASSWORD= **see note below**
             - EMAIL_ADDRESS= **see note below**
 
-6. **Run the migration to create all the tables**
+7. **Run the migration to create all the tables**
     In the terminal, run this command
 
         alembic upgrade heads
 
-7. **Add testing data to the respective tables**
+8. **Add testing data to the respective tables**
     In the terminal, run this command
 
         python load_csv_to_db.py
 
 #### INFO ---------------------------------------
-After the code in line 7 runs, you automatically have two users in the database with at least 4 weeks tracking data
-            **username**: alexis, **password**: 123456789
-            **username**:john, **password**: 123456789
+    After the code in line 8 runs, you automatically have two users in the database with at least 4 weeks tracking data
+
+            username: alexis, password: 123456789
+            username:john, password: 123456789
 Any of these user can be used to test the code
 ### -----------------------------------------------
 
-8. **Run the code**
+9. **Run the code**
     In the terminal, run this command
 
         uvicorn app.main:app --reload
@@ -89,7 +90,7 @@ Any of these user can be used to test the code
             INFO:     Waiting for application startup.
             INFO:     Application startup complete.
 
-9. **API ENDPOINT's**
+10. **API ENDPOINT's**
     To view all the endpoints and test out this API
     Navigate to
         http://127.0.0.1:8000/docs#/ in your browser _or_
