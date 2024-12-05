@@ -70,8 +70,8 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
 
 #### INFO ---------------------------------------
 After the code in line 7 runs, you automatically have two users in the database with at least 4 weeks tracking data
-**username**: alexis, **password**: 123456789
-**username**:john, **password**: 123456789
+            **username**: alexis, **password**: 123456789
+            **username**:john, **password**: 123456789
 Any of these user can be used to test the code
 ### -----------------------------------------------
 
