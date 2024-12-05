@@ -1,10 +1,11 @@
-from typing import List
-from fastapi import APIRouter, Response, status, Depends, HTTPException
+from typing import List, Optional
+from fastapi import APIRouter, Response, status, Depends, HTTPException, Query
 from ..Schemas import habits_schemas
 from fastapi.params import Body
 from ..Utils import database, oauth2, validators
 from sqlalchemy.orm import Session
 from ..Models import habits_model
+from app.Schemas.habits_schemas import Periodicity
 
 
 router = APIRouter(
@@ -23,8 +24,18 @@ async def createHabit(habit: habits_schemas.HabitCreate = Body(...), db: Session
     return new_habit
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[habits_schemas.Habit])
-async def getAllHabits(db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
-    habits = db.query(habits_model.Habit).filter(habits_model.Habit.user_id == current_user.user_id).all()
+async def getAllHabits(db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user), periodicity: Optional[Periodicity] = Query(None, description="Filter habits by periodicity")):
+
+    habits_query = db.query(habits_model.Habit).filter(habits_model.Habit.user_id == current_user.user_id)
+
+    if periodicity:
+        habits_query = habits_query.filter(habits_model.Habit.periodicity == periodicity)
+    
+    habits = habits_query.all()
+
+    if not habits:
+        await validators.Validator_Functions.general_error("No habits found")
+
     return habits
 
 @router.get("/{habit_id}", status_code=status.HTTP_200_OK, response_model=habits_schemas.Habit)

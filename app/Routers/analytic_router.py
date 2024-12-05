@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, Query
 from sqlalchemy.orm import Session
 from ..Utils import database, oauth2, validators, analytic_helper
 from ..Models import analytics_model, habits_model
@@ -48,10 +48,15 @@ async def update_streak(
 
 # Get all analytics data/streaks
 @router.get("/", status_code=status.HTTP_200_OK)
-async def get_all_analytics_data(db: Session = Depends(database.get_db), current_user: users_schemas.User = Depends(oauth2.get_current_user)):
+async def get_all_analytics_data(db: Session = Depends(database.get_db), current_user: users_schemas.User = Depends(oauth2.get_current_user), periodicity: habits_schemas.Periodicity = Query(None, description="Filter habits by periodicity")):
 
     analysis = db.query(analytics_model.Analytic).filter(analytics_model.Analytic.user_id == current_user.user_id).all()
-    habits = db.query(habits_model.Habit).filter(habits_model.Habit.user_id == current_user.user_id).all()
+    habits_query = db.query(habits_model.Habit).filter(habits_model.Habit.user_id == current_user.user_id)
+
+    if periodicity:
+        habits_query = habits_query.filter(habits_model.Habit.periodicity == periodicity)
+    
+    habits = habits_query.all()
 
     habit_map = {habit.habit_id: {"name": habit.habit, "description": habit.description} for habit in habits}
 
@@ -70,6 +75,9 @@ async def get_all_analytics_data(db: Session = Depends(database.get_db), current
                 habit=habit_info['name'],
                 description=habit_info['description']
             ))
+        
+    if not response_data:
+        await validators.Validator_Functions.general_error("No analytics data found")
 
     return response_data
 
