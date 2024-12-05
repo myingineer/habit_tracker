@@ -12,6 +12,16 @@ router = APIRouter(
     prefix="/habits"
 )
 
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=habits_schemas.Habit)
+async def createHabit(habit: habits_schemas.HabitCreate = Body(...), db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
+    new_habit = habits_model.Habit(user_id = current_user.user_id, **habit.model_dump())
+
+    db.add(new_habit)
+    db.commit()
+    db.refresh(new_habit)
+
+    return new_habit
+
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[habits_schemas.Habit])
 async def getAllHabits(db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
     habits = db.query(habits_model.Habit).filter(habits_model.Habit.user_id == current_user.user_id).all()
@@ -26,15 +36,6 @@ async def getHabit(habit_id: int, db: Session = Depends(database.get_db), curren
     
     return habit
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=habits_schemas.Habit)
-async def createHabit(habit: habits_schemas.HabitCreate = Body(...), db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
-    new_habit = habits_model.Habit(user_id = current_user.user_id, **habit.model_dump())
-
-    db.add(new_habit)
-    db.commit()
-    db.refresh(new_habit)
-
-    return new_habit
 
 @router.patch("/{habit_id}", status_code=status.HTTP_200_OK, response_model=habits_schemas.Habit)
 async def updateHabit(habit_id: int, habit_fields_to_update: habits_schemas.HabitUpdate, db: Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):

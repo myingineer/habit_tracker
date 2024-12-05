@@ -11,6 +11,41 @@ router = APIRouter(
     prefix="/analytics"
 )
 
+# Update the streak count
+@router.post("/streak/update", status_code=status.HTTP_200_OK, response_model=analytics_schema.AnalyticResponse)
+async def update_streak(
+    streak_data: analytics_schema.Streak,
+    db: Session = Depends(database.get_db),
+    current_user: users_schemas.User = Depends(oauth2.get_current_user)
+):
+    
+    habit = db.query(habits_model.Habit).filter(habits_model.Habit.habit_id == streak_data.habit_id).first()
+    await validators.Validator_Functions.habit_exist(habit, streak_data.habit_id)
+    await validators.Validator_Functions.confirm_permission(habit.user_id, current_user.user_id)
+
+    # Update the streak
+    response = await analytic_helper.update_streak_count(streak_data, current_user, db, habits_model, analytics_model)
+
+    # Save the streak data to be used for analytics later
+    data = {
+        "habit_id": habit.habit_id,
+        "streak_completed_at": datetime.now(timezone.utc),
+        "streak_count": response['current_streak_count']
+    }
+
+    # Save the data to the appropriate table
+    if habit.periodicity == habits_schemas.Periodicity.Daily:
+        db.add(analytics_model.AnalyticsDaily(**data))
+        db.commit()
+    elif habit.periodicity == habits_schemas.Periodicity.Weekly:
+        db.add(analytics_model.AnalyticsWeekly(**data))
+        db.commit()
+    elif habit.periodicity == habits_schemas.Periodicity.Monthly:
+        db.add(analytics_model.AnalyticsMonthly(**data))
+        db.commit()
+        
+    return response
+
 # Get all analytics data/streaks
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_all_analytics_data(db: Session = Depends(database.get_db), current_user: users_schemas.User = Depends(oauth2.get_current_user)):
@@ -64,38 +99,3 @@ async def get_specific_analytics_data(habit_id: int, db: Session = Depends(datab
 
     return response_data
 
-
-# Update the streak count
-@router.post("/streak/update", status_code=status.HTTP_200_OK, response_model=analytics_schema.AnalyticResponse)
-async def update_streak(
-    streak_data: analytics_schema.Streak,
-    db: Session = Depends(database.get_db),
-    current_user: users_schemas.User = Depends(oauth2.get_current_user)
-):
-    
-    habit = db.query(habits_model.Habit).filter(habits_model.Habit.habit_id == streak_data.habit_id).first()
-    await validators.Validator_Functions.habit_exist(habit, streak_data.habit_id)
-    await validators.Validator_Functions.confirm_permission(habit.user_id, current_user.user_id)
-
-    # Update the streak
-    response = await analytic_helper.update_streak_count(streak_data, current_user, db, habits_model, analytics_model)
-
-    # Save the streak data to be used for analytics later
-    data = {
-        "habit_id": habit.habit_id,
-        "streak_completed_at": datetime.now(timezone.utc),
-        "streak_count": response['current_streak_count']
-    }
-
-    # Save the data to the appropriate table
-    if habit.periodicity == habits_schemas.Periodicity.Daily:
-        db.add(analytics_model.AnalyticsDaily(**data))
-        db.commit()
-    elif habit.periodicity == habits_schemas.Periodicity.Weekly:
-        db.add(analytics_model.AnalyticsWeekly(**data))
-        db.commit()
-    elif habit.periodicity == habits_schemas.Periodicity.Monthly:
-        db.add(analytics_model.AnalyticsMonthly(**data))
-        db.commit()
-        
-    return response
