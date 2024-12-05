@@ -43,7 +43,7 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
     - Create a Database
 
 6. **Set up the environment variables**
-    Create a .env file in the root directory
+    Create a `.env` file in the root directory
 
         Add the following variables
         
