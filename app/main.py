@@ -15,8 +15,8 @@ app.add_middleware(
 )
 
 app.include_router(users_router.router)
-app.include_router(habits_router.router)
 app.include_router(auth_router.router)
+app.include_router(habits_router.router)
 app.include_router(analytic_router.router)
 
 @app.get("/")
