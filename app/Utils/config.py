@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     EMAIL_ADDRESS: str
     EMAIL_APP_PASSWORD: str
 
-    class Config:
+    class ConfigDict:
         env_file = ".env"
 
 
