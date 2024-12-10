@@ -19,5 +19,5 @@ class AnalyticResponse(AnalyticBase):
     habit: str
     description: str
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

@@ -16,7 +16,7 @@ class User(UserBase):
     user_id: int
     created_at: datetime
 
-    class Config:
+    class ConfigDDict:
         from_attributes = True
 
 # User Schema for Token Data

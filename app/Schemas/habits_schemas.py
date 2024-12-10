@@ -31,5 +31,5 @@ class Habit(HabitBase):
     date_to_complete: Optional[date] = None
     user_id: int
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
