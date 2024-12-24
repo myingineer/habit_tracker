@@ -34,7 +34,7 @@ async def getAllHabits(db: Session = Depends(database.get_db), current_user: int
     habits = habits_query.all()
 
     if not habits:
-        await validators.Validator_Functions.general_error("No habits found")
+        await validators.Validator_Functions.general_error("No habits found", status.HTTP_404_NOT_FOUND)
 
     return habits
 
@@ -60,10 +60,7 @@ async def updateHabit(habit_id: int, habit_fields_to_update: habits_schemas.Habi
 
     if not update_data:
         available_fields = list(habits_schemas.HabitUpdate.model_fields.keys())
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"No valid fields to update. Valid fields are {available_fields}"
-        )
+        await validators.Validator_Functions.general_error(f"No fields to update, available fields are: {available_fields}", status.HTTP_400_BAD_REQUEST)
     
     for key, value in update_data.items():
         setattr(habit, key, value)
