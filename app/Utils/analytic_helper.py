@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone, date
 from ..Schemas import habits_schemas
 from ..Schemas import analytics_schema, users_schemas
 from ..Models import habits_model, analytics_model
+from fastapi import status
 
 
 def refresh_streak_and_time(analytic, habit, current_time):
@@ -66,7 +67,7 @@ async def update_streak_count(
 
     # Compares the user expected date to complete the habit with the current date
     if habit.date_to_complete and habit.date_to_complete <= date.today():
-        await Validator_Functions.general_error("Habit has already been completed")
+        await Validator_Functions.general_error("Habit has already been completed", status.HTTP_400_BAD_REQUEST)
 
 
     # Check if the streak exists
@@ -105,7 +106,7 @@ async def update_streak_count(
         if current_time >= next_update_time:
             refresh_streak_and_time(analytic, habit, current_time)
         else:
-            await Validator_Functions.general_error(f"Habit with ID: {streak_data.habit_id} can only be updated after {next_update_time}")
+            await Validator_Functions.general_error(f"Habit with ID: {streak_data.habit_id} can only be updated after {next_update_time}", status.HTTP_400_BAD_REQUEST)
     else:
         # If the analytic data does not exist, we create a new analytic data for the user
         
