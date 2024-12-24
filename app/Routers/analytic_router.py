@@ -77,7 +77,7 @@ async def get_all_analytics_data(db: Session = Depends(database.get_db), current
             ))
         
     if not response_data:
-        await validators.Validator_Functions.general_error("No analytics data found")
+        await validators.Validator_Functions.general_error("No analytics data found", status.HTTP_404_NOT_FOUND)
 
     return response_data
 
