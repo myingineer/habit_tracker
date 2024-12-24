@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, status, Depends
 from fastapi.params import Body
 from ..Utils import database, utils, oauth2, mailing, validators
 from sqlalchemy.orm import Session

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import APIRouter, Response, status, Depends, HTTPException, Query
+from fastapi import APIRouter, Response, status, Depends, Query
 from ..Schemas import habits_schemas
 from fastapi.params import Body
 from ..Utils import database, oauth2, validators
