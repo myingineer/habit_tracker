@@ -40,7 +40,10 @@ A **Backend API** for a **Habit Tracking System**, designed for efficient tracki
         [Click Here to Download](https://www.postgresql.org/download/)
 
     - Create a Server
-    - Create a Database
+    - Create a two **DATABASES** with the same name but one ends with test 
+            
+            EXAMPLE
+            db_name & db_name_test
 
 6. **Set up the environment variables**
     Create a `.env` file in the root directory
