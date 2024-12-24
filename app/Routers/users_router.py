@@ -33,7 +33,7 @@ async def createUser(user: users_schemas.UserCreate = Body(...), db: Session = D
         db.refresh(new_user)
     except IntegrityError:
         db.rollback()
-        validators.Validator_Functions.general_error("User with email or username already exists", status.HTTP_409_CONFLICT)
+        await validators.Validator_Functions.general_error("User with email or username already exists", status.HTTP_409_CONFLICT)
     
     # Contents of the email
     email_string = f"Welcome OnBoard to our Application. We hope you keep to your habits. Cheersssss!!!!"
@@ -42,7 +42,7 @@ async def createUser(user: users_schemas.UserCreate = Body(...), db: Session = D
     try:
         await mailing.send_email(user.email, "Welcome OnBoard", html)
     except Exception:
-        validators.Validator_Functions.general_error("Email sending failed", status.HTTP_400_BAD_REQUEST)
+        await validators.Validator_Functions.general_error("Email sending failed", status.HTTP_400_BAD_REQUEST)
     
     return new_user
 
@@ -79,16 +79,13 @@ async def confirmResetEmail(update_info: users_schemas.EmailVerify = Body(...), 
         db.commit()
     except Exception:
         db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Database update failed"
-        )
+        await validators.Validator_Functions.general_error("Database update failed", status.HTTP_409_CONFLICT)
 
     # Try to send the email
     try:
         await mailing.send_email(user.email, "Password Reset Code", html)
     except Exception:
-        validators.Validator_Functions.general_error("Email sending failed", status.HTTP_400_BAD_REQUEST)
+        await validators.Validator_Functions.general_error("Email sending failed", status.HTTP_400_BAD_REQUEST)
 
     return {
         "status": "success",
@@ -114,7 +111,7 @@ async def confirmResetCode(
         db.commit()
     except Exception:
         db.rollback()
-        validators.Validator_Functions.general_error("Database update failed", status.HTTP_409_CONFLICT)
+        await validators.Validator_Functions.general_error("Database update failed", status.HTTP_409_CONFLICT)
 
     return {
         "status": "success",
@@ -142,7 +139,7 @@ async def resetPassword(
         user.is_token_verified = False
         db.commit()
         
-        validators.Validator_Functions.general_error("Reset code has expired", status.HTTP_403_FORBIDDEN)
+        await validators.Validator_Functions.general_error("Reset code has expired", status.HTTP_403_FORBIDDEN)
 
 
     user.password = utils.hash_password(update_info.new_password)
@@ -155,7 +152,7 @@ async def resetPassword(
         db.commit()
     except Exception:
         db.rollback()
-        validators.Validator_Functions.general_error("Database update failed", status.HTTP_409_CONFLICT)
+        await validators.Validator_Functions.general_error("Database update failed", status.HTTP_409_CONFLICT)
     
     email_string = f"Your password was successfully changed. If you didn't do this, Please contact support immediately. Else, Ignore this email. Cheersss!!!"
     html = utils.emailTemplate(user.username, email_string)
@@ -163,6 +160,6 @@ async def resetPassword(
     try:
         await mailing.send_email(user.email, "Password Reset Successful", html)
     except Exception:
-        validators.Validator_Functions.general_error("Email sending failed", status.HTTP_400_BAD_REQUEST)
+        await validators.Validator_Functions.general_error("Email sending failed", status.HTTP_400_BAD_REQUEST)
 
     return user

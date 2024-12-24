@@ -18,11 +18,11 @@ async def loginUser(user_credentials: OAuth2PasswordRequestForm = Depends(), db:
 
     # If the user is not found, raise an exception
     if not user:
-        validators.Validator_Functions.general_error("Invalid credentials", status.HTTP_403_FORBIDDEN)
+        await validators.Validator_Functions.general_error("Invalid credentials", status.HTTP_403_FORBIDDEN)
     
     # Check if the password is correct
     if not utils.verify_password(user_credentials.password, user.password):
-        validators.Validator_Functions.general_error("Invalid credentials", status.HTTP_403_FORBIDDEN)
+        await validators.Validator_Functions.general_error("Invalid credentials", status.HTTP_403_FORBIDDEN)
     
     # Create an access token
     access_token = oauth2.create_access_token(
