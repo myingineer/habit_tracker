@@ -30,7 +30,7 @@ def test_login(client, test_user):
     assert response.status_code == 200
 
 
-# Test wrong login credentials
+# Test wrong login credentials with different combinations
 @pytest.mark.parametrize("username, password, status_code", [
     ("test_user", "wrong_password", 403),
     ("wrong_user", "test_password", 403),

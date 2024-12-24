@@ -6,6 +6,7 @@ from app.main import app
 from app.Utils.config import settings
 from app.Utils.database import get_db
 from app import Models
+from app.Utils import oauth2
 
 
 # Testing Database URL
@@ -31,7 +32,7 @@ def db_session():
     finally:
         db.close()
 
-# Create a test client
+# Create a test client. Calling the client with automatically call  the db_session fixture
 @pytest.fixture()
 def client(db_session):
     def override_get_db():
@@ -57,3 +58,42 @@ def test_user(client):
     new_user = response.json()
     new_user["password"] = user_data["password"]
     return new_user
+
+# Create a test user token without using the full login route
+@pytest.fixture()
+def token(test_user):
+    return oauth2.create_access_token({"user_id": test_user["user_id"]})
+
+# Create a client with the authorization header set
+@pytest.fixture()
+def authorized_client(client, token):
+    client.headers["Authorization"] = f"Bearer {token}"
+    return client
+
+# Create a test habit
+@pytest.fixture()
+def test_habits(test_user, db_session):
+    habits_data = [
+        {
+            "habit": "Test Habit 1",
+            "description": "Test Description 1",
+            "periodicity": "daily",
+            "user_id": test_user["user_id"]
+        },
+        {
+            "habit": "Test Habit 2",
+            "description": "Test Description 2",
+            "periodicity": "weekly",
+            "user_id": test_user["user_id"]
+        },
+        {
+            "habit": "Test Habit 3",
+            "description": "Test Description 3",
+            "periodicity": "monthly",
+            "user_id": test_user["user_id"]
+        }
+    ]
+    db_session.add_all([Models.Habit(**habit) for habit in habits_data])
+    db_session.commit()
+    habits = db_session.query(Models.Habit).all()
+    return habits
