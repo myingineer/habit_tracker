@@ -1,7 +1,7 @@
 "habit_id","current_streak_count","longest_streak_count","periodicity","user_id","daily_last_updated","weekly_last_updated","monthly_last_updated"
-1,36,36,"Daily",1,"2024-12-06 08:00:00+01",NULL,NULL
-2,36,36,"Daily",1,"2024-12-06 07:30:00+01",NULL,NULL
-3,36,36,"Daily",2,"2024-12-06 20:00:00+01",NULL,NULL
-4,36,36,"Daily",2,"2024-12-06 06:30:00+01",NULL,NULL
-5,5,5,"Weekly",2,NULL,"2024-11-29 12:00:00+01",NULL
-6,5,5,"Weekly",1,NULL,"2024-11-29 12:00:00+01",NULL
+1,55,55,"Daily",1,"2024-12-25 08:00:00+01",NULL,NULL
+2,55,55,"Daily",1,"2024-12-25 07:30:00+01",NULL,NULL
+3,55,55,"Daily",2,"2024-12-25 20:00:00+01",NULL,NULL
+4,55,55,"Daily",2,"2024-12-25 06:30:00+01",NULL,NULL
+5,8,8,"Weekly",2,NULL,"2024-12-20 12:00:00+01",NULL
+6,8,8,"Weekly",1,NULL,"2024-12-20 12:00:00+01",NULL
