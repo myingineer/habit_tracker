@@ -85,15 +85,73 @@ def test_habits(test_user, db_session):
             "description": "Test Description 2",
             "periodicity": "weekly",
             "user_id": test_user["user_id"]
-        },
-        {
-            "habit": "Test Habit 3",
-            "description": "Test Description 3",
-            "periodicity": "monthly",
-            "user_id": test_user["user_id"]
         }
     ]
     db_session.add_all([Models.Habit(**habit) for habit in habits_data])
     db_session.commit()
     habits = db_session.query(Models.Habit).all()
     return habits
+
+# Create a test analytics data for testing the analytics route
+@pytest.fixture()
+def test_analytics(test_habits, db_session):
+    # Testing data for the analytic table
+    analytics_data = [
+        {
+            "habit_id": test_habits[0].habit_id,
+            "current_streak_count": 10,
+            "longest_streak_count": 10,
+            "periodicity": "daily",
+            "user_id": test_habits[0].user_id,
+            "daily_last_updated": "2021-01-01 00:00:00",
+            "weekly_last_updated": None,
+            "monthly_last_updated": None
+        },
+        {
+            "habit_id": test_habits[1].habit_id,
+            "current_streak_count": 5,
+            "longest_streak_count": 5,
+            "periodicity": "weekly",
+            "user_id": test_habits[1].user_id,
+            "daily_last_updated": None,
+            "weekly_last_updated": "2021-01-01 00:00:00",
+            "monthly_last_updated": None
+        }
+    ]
+
+    # Testing data for the daily analytics table
+    daily_analytics_data = [
+        {
+            "habit_id": test_habits[0].habit_id,
+            "streak_completed_at": "2021-01-01 00:00:00",
+            "streak_count": 10
+        }
+    ]
+    
+    # Testing data for the weekly analytics table
+    weekly_analytics_data = [
+        {
+            "habit_id": test_habits[1].habit_id,
+            "streak_completed_at": "2021-01-01 00:00:00",
+            "streak_count": 5
+        }
+    ]
+
+    db_session.add_all([Models.Analytic(**data) for data in analytics_data])
+
+    """
+        Upon adding data to the streak_analytics table, the corresponding streak data must be added to
+        either the daily or weekly analytics table to store the data at the point of completion for the appropriate periodicity.
+
+        That is why we are looping through.
+    """
+    for data in analytics_data:
+        if data["periodicity"] == "daily":
+            db_session.add_all([Models.AnalyticsDaily(**entry) for entry in daily_analytics_data])
+        elif data["periodicity"] == "weekly":
+            db_session.add_all([Models.AnalyticsWeekly(**entry) for entry in weekly_analytics_data])
+
+
+    db_session.commit()
+    analytics = db_session.query(Models.Analytic).all()
+    return analytics
