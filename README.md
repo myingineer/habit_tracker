@@ -106,6 +106,15 @@ Any of these user can be used to test the code
 
     _make sure the port **8000** is the same as where your project is running on from point **9** above_
 
+11. **TESTS WITH PYTEST**
+    To run the tests from the terminal with pytest
+
+        On your terminal, type
+
+            pytest
+
+    This would automatically detect all tests and run it.
+
 ## NOTE ON LOGIN ENDPOINT --------------
 If you plan to send the **login** details via Postman or Thunder client, send the body as a **form-data** **_not_** **raw json**
 If you want to login via FastApi documentation through the link in **10**, Login via the **Authorize** at the very top
